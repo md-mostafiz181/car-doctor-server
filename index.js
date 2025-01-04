@@ -31,7 +31,7 @@ async function run() {
     //service related collection
     const serviceCollection=client.db("carDoctor").collection("services");
     //booking related collection
-    const carDoctorCollection =client.db("carDoctor").collection("bookings")
+    const bookingsCollection =client.db("carDoctor").collection("bookings")
 
 
 //service related api
@@ -46,7 +46,7 @@ async function run() {
         const id=req.params.id
         const query = {_id: new ObjectId(id)}
         const options = {
-            projection: {  title: 1, price: 1, service_id:1 },
+            projection: {  title: 1, price: 1, service_id:1,img:1 },
           };
         const result=await serviceCollection.findOne(query,options)
         res.send(result)
@@ -54,10 +54,23 @@ async function run() {
 
     //bookings related api
 
+    app.get("/bookings", async(req,res)=>{
+      // const bookings=req.body;
+      console.log(req.query.email)
+      let query={};
+      if(req.query?.email){
+        query={email:req.query.email}
+      }
+      const result = await bookingsCollection.find(query).toArray();
+      res.send(result)
+    })
+
+
     app.post("/bookings", async(req,res)=>{
-        const bookings=req.body;
-        const result= await carDoctorCollection.find(bookings)
+        const booking=req.body;
+        const result=await bookingsCollection.insertOne(booking)
         res.send(result)
+ 
 
     })
 
