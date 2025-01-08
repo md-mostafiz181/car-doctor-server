@@ -84,10 +84,20 @@ async function run() {
       res.send(result)
     });
 
-    //update a specific bookings by using put api
-    app.put("/bookings/:id", async(req,res)=>{
+    //update a specific bookings by using patch api
+    app.patch("/bookings/:id", async(req,res)=>{
+      const id = req.params.id;
       const updatedBookings=req.body;
+      const filter = {_id: new ObjectId(id)}
       console.log(updatedBookings)
+      const updateDoc = {
+        $set: {
+          status: updatedBookings.status
+        },
+      };
+      const result = await bookingsCollection.updateOne(filter,updateDoc);
+      res.send(result)
+      
     })
 
 
