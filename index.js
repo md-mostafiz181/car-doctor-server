@@ -52,34 +52,46 @@ async function run() {
         res.send(result)
     })
 
-    //bookings related api
+    //bookings related api start
 
+
+    // get some bookings by using query and email
     app.get("/bookings", async(req,res)=>{
-      // const bookings=req.body;
-      // console.log(req.query.email)
       let query={};
       if(req.query?.email){
         query={email:req.query.email}
       }
       const result = await bookingsCollection.find(query).toArray();
       res.send(result)
-    })
+    });
 
 
+   // get all bookings
     app.post("/bookings", async(req,res)=>{
         const booking=req.body;
         const result=await bookingsCollection.insertOne(booking)
         res.send(result)
  
 
-    })
+    });
 
+
+    //delete specific bookings by using id
     app.delete("/bookings/:id",async(req,res)=>{
       const id =req.params.id;
       const query={_id: new ObjectId(id)}
       const result = await bookingsCollection.deleteOne(query)
       res.send(result)
+    });
+
+    //update a specific bookings by using put api
+    app.put("/bookings/:id", async(req,res)=>{
+      const updatedBookings=req.body;
+      console.log(updatedBookings)
     })
+
+
+    //bookings related api end
 
 
 
